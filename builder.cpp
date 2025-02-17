@@ -51,7 +51,7 @@ int main()
     ifstream file = getFile("demo");
     string mainHTML = readFile(file);
 
-    smatch componentMatch = findCustomTagOcurrence(mainHTML);
+    smatch componentMatch = findCustomTagOccurrence(mainHTML);
     string componentName = componentMatch[1].str();
     ifstream componentFile = getFile(componentName);
     string componentHTML = readFile(componentFile);
