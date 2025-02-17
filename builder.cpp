@@ -1,24 +1,60 @@
 #include <iostream>
 #include <fstream>
+#include <regex>
 
 using namespace std;
+string pattern = "<([A-Z][a-zA-Z0-9]*)\\b[^>]*>";
 
-void readFile(ifstream &file)
+smatch findCustomTagOccurrence(string text)
 {
-    string content;
-    while (getline(file, content))
-    {
-        cout << content;
-    }
-    file.close();
+    regex r(pattern);
+    smatch match;
+    regex_search(text, match, r);
+
+    // TO DO - Handle no ocurrence
+    // TO DO - Handle multiple ocurrences
+
+    cout << match[1] << endl;
+
+    return match;
 }
 
-void getFile(string name)
+string readFile(ifstream &file)
 {
-    ifstream Banana("./Banana.html");
+    string content;
+    string lineContent;
+
+    while (getline(file, lineContent))
+    {
+        content += lineContent;
+    }
+
+    file.close();
+    return content;
+}
+
+ifstream getFile(string name)
+{
+    string path = "./";
+    string type = ".html";
+    string pathToFile = path + name + type;
+    ifstream file(pathToFile);
+
+    // TO DO - handle no file
+
+    return file;
 }
 
 int main()
 {
-    cout << "Hello" << endl;
+
+    ifstream file = getFile("demo");
+    string mainHTML = readFile(file);
+
+    smatch componentMatch = findCustomTagOcurrence(mainHTML);
+    string componentName = componentMatch[1].str();
+    ifstream componentFile = getFile(componentName);
+    string componentHTML = readFile(componentFile);
+
+    string replaced = regex_replace(mainHTML, regex(pattern), componentHTML);
 }
