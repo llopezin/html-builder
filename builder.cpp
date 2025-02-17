@@ -2,13 +2,12 @@
 #include <fstream>
 #include <regex>
 
-using namespace std;
-string pattern = "<([A-Z][a-zA-Z0-9]*)\\b[^>]*>";
+auto pattern = std::string{"<([A-Z][a-zA-Z0-9]*)\\b[^>]*>"};
 
-smatch findCustomTagOccurrence(string text)
+std::smatch findCustomTagOccurrence(const std::string &text)
 {
-    regex r(pattern);
-    smatch match;
+    auto r = std::regex{pattern};
+    std::smatch match;
     regex_search(text, match, r);
 
     // TO DO - Handle no ocurrence
@@ -19,10 +18,10 @@ smatch findCustomTagOccurrence(string text)
     return match;
 }
 
-string readFile(ifstream &file)
+std::string readFile(std::ifstream &file)
 {
-    string content;
-    string lineContent;
+    auto content = std::string{};
+    std::string lineContent;
 
     while (getline(file, lineContent))
     {
@@ -34,12 +33,12 @@ string readFile(ifstream &file)
     return content;
 }
 
-ifstream getFile(string name)
+std::ifstream getFile(std::string name)
 {
-    string path = "./";
-    string type = ".html";
-    string pathToFile = path + name + type;
-    ifstream file(pathToFile);
+    auto path = "./";
+    auto type = ".html";
+    auto pathToFile = path + name + type;
+    auto file = std::ifstream{pathToFile};
 
     // TO DO - handle no file
 
@@ -49,15 +48,15 @@ ifstream getFile(string name)
 int main()
 {
 
-    ifstream file = getFile("demo");
-    string mainHTML = readFile(file);
+    auto file = getFile("demo");
+    auto mainHTML = readFile(file);
 
-    smatch componentMatch = findCustomTagOccurrence(mainHTML);
-    string componentName = componentMatch[1].str();
-    std::cout << "componentName: "<< componentName << std::endl;
-    ifstream componentFile = getFile(componentName);
-    string componentHTML = readFile(componentFile);
+    auto componentMatch = findCustomTagOccurrence(mainHTML);
+    auto componentName = componentMatch[1].str();
+    std::cout << "replacing componentName: "<< componentName << std::endl;
+    auto componentFile = getFile(componentName);
+    auto componentHTML = readFile(componentFile);
 
-    string replaced = regex_replace(mainHTML, regex(pattern), componentHTML);
+    auto replaced = std::regex_replace(mainHTML, std::regex(pattern), componentHTML);
     std::cout << "replaced:\n" << replaced << std::endl;
 }
