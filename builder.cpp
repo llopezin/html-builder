@@ -18,8 +18,10 @@ std::smatch findCustomTagOccurrence(const std::string &text)
     return match;
 }
 
-std::string readFile(std::ifstream &file)
+std::string readFile(const std::string &filepath)
 {
+    auto file = std::ifstream{filepath};
+    // TO DO - handle no file
     auto content = std::string{};
     std::string lineContent;
 
@@ -29,32 +31,27 @@ std::string readFile(std::ifstream &file)
         content += "\n";
     }
 
-    file.close();
     return content;
 }
 
-std::ifstream getFile(std::string name)
+std::string getPath(std::string name)
 {
     auto path = "./";
     auto type = ".html";
     auto pathToFile = path + name + type;
-    auto file = std::ifstream{pathToFile};
-
-    // TO DO - handle no file
-
-    return file;
+    return pathToFile;
 }
 
 int main()
 {
 
-    auto file = getFile("demo");
-    auto mainHTML = readFile(file);
+    auto filepath = getPath("demo");
+    auto mainHTML = readFile(filepath);
 
     auto componentMatch = findCustomTagOccurrence(mainHTML);
     auto componentName = componentMatch[1].str();
     std::cout << "replacing componentName: "<< componentName << std::endl;
-    auto componentFile = getFile(componentName);
+    auto componentFile = getPath(componentName);
     auto componentHTML = readFile(componentFile);
 
     auto replaced = std::regex_replace(mainHTML, std::regex(pattern), componentHTML);
