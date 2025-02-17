@@ -14,7 +14,7 @@ smatch findCustomTagOccurrence(string text)
     // TO DO - Handle no ocurrence
     // TO DO - Handle multiple ocurrences
 
-    cout << match[1] << endl;
+//    cout << match[1] << endl;
 
     return match;
 }
@@ -27,6 +27,7 @@ string readFile(ifstream &file)
     while (getline(file, lineContent))
     {
         content += lineContent;
+        content += "\n";
     }
 
     file.close();
@@ -53,8 +54,10 @@ int main()
 
     smatch componentMatch = findCustomTagOccurrence(mainHTML);
     string componentName = componentMatch[1].str();
+    std::cout << "componentName: "<< componentName << std::endl;
     ifstream componentFile = getFile(componentName);
     string componentHTML = readFile(componentFile);
 
     string replaced = regex_replace(mainHTML, regex(pattern), componentHTML);
+    std::cout << "replaced:\n" << replaced << std::endl;
 }
